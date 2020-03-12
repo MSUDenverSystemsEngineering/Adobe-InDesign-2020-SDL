@@ -143,10 +143,10 @@ Try {
 		}
 
 		## <Perform Installation tasks here>
-	
+
 		$exitCode = Execute-Process -Path "$dirFiles\Build\setup.exe" -Parameters "--silent --INSTALLLANGUAGE=en_US" -WindowStyle "Hidden" -PassThru
 		If (($exitCode.ExitCode -ne "0") -and ($mainExitCode -ne "3010")) { $mainExitCode = $exitCode.ExitCode }
-		
+
 
 		##*===============================================
 		##* POST-INSTALLATION
@@ -157,17 +157,17 @@ Try {
 
 		#Fix Adobe's garbage installer if it kills explorer
         $ProcessActive = Get-Process explorer -ErrorAction SilentlyContinue
-        if($ProcessActive -eq $null){
+        if($ProcessActive){
             Execute-ProcessAsUser -Path "$envSystemRoot\explorer.exe"
             Write-Log "Restarting Explorer"
         }
         Else{
             Write-Log "No restart of explorer needed"
         }
-        
+
 		Execute-Process -Path "$envCommonProgramFilesX86\Adobe\OOBE_Enterprise\RemoteUpdateManager\RemoteUpdateManager.exe" -WindowStyle "Hidden" -PassThru -IgnoreExitCodes '1'
 		Remove-File -Path "$envCommonDesktop\Adobe Creative Cloud.lnk" -ContinueOnError $true
-		
+
 
 		## Display a message at the end of the install
 		If (-not $useDefaultMsi) {
